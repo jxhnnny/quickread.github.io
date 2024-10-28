@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure QR Code Data</title>
+    <style>
+        body {
+            background-image: url('DALL·E 2024-10-27 23.51.56 - A stylish icon for a QR scanning app with a modern, sleek design. The icon should feature a QR code motif in a vibrant color like neon blue or green a.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: black;
+            font-family: 'Calibri', Times, serif;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.4);
+            font-size: 50px;
+            position: absolute;
+            top: 10px;             left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+        }
+
+        .container {
+            color: white;
+            text-align: center;
+            max-width: 400px;
+            background-color: rgba(0, 0, 0, 0.6); 
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>WELCOME TO QUICK READ</h1>
+
+    <div class="container">
+        <h2>Enter PIN to Access Data</h2>
+        <input type="password" id="pinInput" placeholder="Enter PIN" />
+        <button onclick="verifyPin()">Submit</button>
+        <p id="message" style="color: red;"></p>
+        <div id="dataContainer" style="display:none;">
+            <h3>QR Code Data</h3>
+            <p id="qrData"></p>
+        </div>
+    </div>
+
+    <script>
+        function verifyPin() {
+            const enteredPin = document.getElementById("pinInput").value;
+            const correctPin = "2234";
+            const data = "Name: John Doe, ID: 1234567890, Email: john.doe@example.com";
+
+            if (enteredPin === correctPin) {
+                document.getElementById("qrData").innerText = data;
+                document.getElementById("dataContainer").style.display = "block";
+                document.getElementById("pinInput").style.display = "none";
+                document.querySelector("button").style.display = "none";
+                document.getElementById("message").style.display = "none";
+            } else {
+                document.getElementById("message").innerText = "Incorrect PIN. Please try again.";
+            }
+        }
+    </script>
+</body>
+</html>
