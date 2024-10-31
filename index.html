@@ -23,7 +23,8 @@
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.4);
             font-size: 50px;
             position: absolute;
-            top: 10px;             left: 50%;
+            top: 10px;             
+            left: 50%;
             transform: translateX(-50%);
             margin: 0;
         }
@@ -43,30 +44,52 @@
 
     <div class="container">
         <h2>Enter PIN to Access Data</h2>
-        <input type="password" id="pinInput" placeholder="Enter PIN" />
-        <button onclick="verifyPin()">Submit</button>
-        <p id="message" style="color: red;"></p>
-        <div id="dataContainer" style="display:none;">
-            <h3>QR Code Data</h3>
-            <p id="qrData"></p>
-        </div>
+        
+        <?php if (!empty($message)): ?>
+            <p id="message" style="color: red;"><?= $message; ?></p>
+        <?php endif; ?>
+
+        <?php if (empty($enteredPin) || ($message === "Incorrect PIN." || $message === "No QR Code provided.")): ?>
+            <form method="post">
+                <input type="password" name="pin" placeholder="Enter PIN" required />
+                <button type="submit">Submit</button>
+            </form>
+        <?php else: ?>
+            <div id="dataContainer">
+                <h3>QR Code Data</h3>
+                <p id="qrData">QR Code data retrieved successfully!</p>
+                <!-- Display additional data here as needed -->
+            </div>
+        <?php endif; ?>
     </div>
 
     <script>
-        function verifyPin() {
-            const enteredPin = document.getElementById("pinInput").value;
-            const correctPin = "2234";
-            const data = "Name: John Doe, ID: 1234567890, Email: john.doe@example.com";
+        const urlParams = new URLSearchParams(window.location.search);
+        const uniqueId = urlParams.get('uniqueID'); // Ensure to use uniqueID for fetching
 
-            if (enteredPin === correctPin) {
-                document.getElementById("qrData").innerText = data;
-                document.getElementById("dataContainer").style.display = "block";
-                document.getElementById("pinInput").style.display = "none";
-                document.querySelector("button").style.display = "none";
-                document.getElementById("message").style.display = "none";
-            } else {
-                document.getElementById("message").innerText = "Incorrect PIN. Please try again.";
-            }
+        if (uniqueId) {
+            fetch(`https://yourwebsite.com/api/getUserData?data=${uniqueId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('qrData').innerText = "Data not found";
+                    } else {
+                        document.getElementById('qrData').innerHTML = `
+                            <p>Name: ${data.name}</p>
+                            <p>Surname: ${data.surname}</p>
+                            <p>ID Number: ${data.id_number}</p>
+                            <p>Cell Number: ${data.cell_number}</p>
+                            <p>Email: ${data.email}</p>
+                            <p>Occupation: ${data.occupation}</p>
+                            <p>Address: ${data.address}</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('qrData').innerText = "Error fetching data";
+                });
+        } else {
+            document.getElementById('qrData').innerText = "No data found in URL";
         }
     </script>
 </body>
